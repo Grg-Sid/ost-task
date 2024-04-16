@@ -1,6 +1,7 @@
 import os
 import shutil
-from fastapi import FastAPI, File, UploadFile, Response
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from resume_parser import parse, open_pdf_file, open_docx_file, open_doc_file
 
@@ -42,16 +43,16 @@ async def upload_resume(file: UploadFile = File(...)):
 
 
 @app.get("/download-resume")
-async def download_excel():
-    file_path = "sheet/result.xlsx"
+async def download_csv():
+    file_path = "sheet/result.csv"
     if os.path.exists(file_path):
-        return Response(
-            content=open(file_path, "rb").read(),
-            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename=result.xlsx"},
+        return FileResponse(
+            file_path,
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=result.csv"},
         )
     else:
-        return {"error": "Excel file not found"}, 404
+        raise HTTPException(status_code=404, detail="File not found")
 
 
 if __name__ == "__main__":

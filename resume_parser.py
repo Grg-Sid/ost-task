@@ -93,20 +93,20 @@ def get_phone_no(document):
 
 def append_or_create_sheet(file_path: str, data: dict):
     try:
-        existing_df = pd.read_excel(file_path)
+        existing_df = pd.read_csv(file_path)
 
         new_row = pd.DataFrame([data])
         existing_df = pd.concat([existing_df, new_row], ignore_index=True)
     except FileNotFoundError:
         existing_df = pd.DataFrame([data])
-    existing_df.to_excel(file_path, index=False)
+    existing_df.to_csv(file_path, index=False)
 
 
 def parse(document: List[str]) -> dict:
     email = get_email(document)
     phone_no = get_phone_no(document)
     document = preprocess_document(document)
-    file_path = "sheet/result.xlsx"
+    file_path = "sheet/result.csv"
     result = {"email": str(email[0]), "phone_no": str(phone_no[0])}
     append_or_create_sheet(file_path=file_path, data=result)
     return result
