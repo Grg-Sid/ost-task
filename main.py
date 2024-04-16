@@ -45,13 +45,10 @@ async def upload_resume(file: UploadFile = File(...)):
 async def download_excel():
     file_path = "sheet/result.xlsx"
     if os.path.exists(file_path):
-        return (
-            Response(
-                content=open(file_path, "rb").read(),
-                media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                headers={"Content-Disposition": f"attachment; filename=result.xlsx"},
-            ),
-            200,
+        return Response(
+            content=open(file_path, "rb").read(),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename=result.xlsx"},
         )
     else:
         return {"error": "Excel file not found"}, 404
